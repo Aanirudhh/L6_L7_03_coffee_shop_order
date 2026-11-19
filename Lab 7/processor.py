@@ -1,23 +1,36 @@
 def lookup_drink_code(code_string):
+    if not isinstance(code_string, str):
+        return None
     code_prefix = code_string.upper()[:3]
     menu_prices = {
         "LAT": 4.50,
         "CAP": 4.00,
         "ESP": 3.00,
         "AME": 3.50,
-        "MOc": 5.00
+        "MOC": 5.00
     }
-    return menu_prices[code_prefix]
+    return menu_prices.get(code_prefix)
 
 def calculate_average_shot_cost(pricing_csv):
-    prices = [float(p) for p in pricing_csv.split(',')]
+    if not isinstance(pricing_csv, str):
+        return None
+    try:
+        prices = [float(p) for p in pricing_csv.split(',')]
+    except ValueError:
+        return None
+    if len(prices) == 0:
+        return None
     return sum(prices) / len(prices)
 
 def parse_order_modifiers(order_spec):
     modifier_dict = {}
+    if not isinstance(order_spec, str):
+        return modifier_dict
     items = order_spec.split(';')
     for item in items:
-        key, value = item.split(':')
+        if ':' not in item:
+            continue
+        key, value = item.split(':', 1)
         modifier_dict[key.strip()] = value.strip()
     return modifier_dict
 
